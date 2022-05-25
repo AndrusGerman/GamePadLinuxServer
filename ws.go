@@ -22,11 +22,14 @@ var (
 )
 
 func handlerEvents(c echo.Context) error {
+	fmt.Println("Se conecto un cliente")
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return err
 	}
 	defer ws.Close()
+	defer fmt.Println("Salio cliente")
+
 	for {
 		// Read
 		_, msg, err := ws.ReadMessage()
@@ -116,7 +119,7 @@ func (ctx *Events) ManagerLatency(ws *websocket.Conn) {
 	}
 }
 
-var pxMovementMax = 12
+var pxMovementMax float64 = 12
 
 func (ctx *Events) ManagerMouse(mouse uinput.Mouse) {
 	switch ctx.Mode {
@@ -132,14 +135,57 @@ func (ctx *Events) ManagerMouse(mouse uinput.Mouse) {
 	}
 }
 
+func getPositive(value float64) float64 {
+	if value < 0 {
+		return value * -1
+	}
+	return value
+}
+
+func returnValueInSRC(value float64, src float64) float64 {
+	var isNegative = src < 0
+	if value > 0 && isNegative == false {
+		return value
+	}
+	return value * -1
+}
+
 func (ctx *Events) UsedMouse(mouse uinput.Mouse) {
 	switch ctx.Mode {
 	case 3:
 		pxEvent = nil
 	case 1:
+		var x = pxMovementMax * float64(ctx.ValueX)
+		var y = pxMovementMax * float64(ctx.ValueY)
+
+		// Is Negative
+		var xNegative = x < 0
+		var yNegative = y < 0
+
+		var xPercent = (x / pxMovementMax)
+		var yPercent = (y / pxMovementMax) // set min speed percent 30%
+		if getPositive(xPercent) < 0.3 {
+			xPercent = returnValueInSRC(0.3, xPercent)
+		}
+		if getPositive(yPercent) < 0.3 {
+			yPercent = returnValueInSRC(0.3, yPercent)
+		}
+
+		// Percent speed
+		x = (x * xPercent)
+		y = (y * yPercent)
+
+		// fixed Negative
+		if x > 0 && xNegative {
+			x = x * -1
+		}
+		if y > 0 && yNegative {
+			y = y * -1
+		}
+
 		mouse.Move(
-			int32(math.Round(float64(pxMovementMax)*float64(ctx.ValueX))),
-			int32(math.Round(float64(pxMovementMax)*float64(ctx.ValueY))),
+			int32(math.Round(x)),
+			int32(math.Round(y)),
 		)
 	}
 }
