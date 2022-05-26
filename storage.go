@@ -12,7 +12,7 @@ import (
 var storage_base_folder = "data_storage"
 
 func StorageHandlerSet(ctx echo.Context) error {
-	NameFile := ctx.Param("name") + ".json"
+	NameFile := ctx.Param("name") + ".back"
 	var dir_file = path.Join(storage_base_folder, NameFile)
 	os.Mkdir(storage_base_folder, 0777)
 	os.Remove(dir_file)
@@ -26,7 +26,7 @@ func StorageHandlerSet(ctx echo.Context) error {
 }
 
 func StorageHandlerGet(ctx echo.Context) error {
-	NameFile := ctx.Param("name") + ".json"
+	NameFile := ctx.Param("name") + ".back"
 	var dir_file = path.Join(storage_base_folder, NameFile)
 
 	var file, err = os.Open(dir_file)
