@@ -11,15 +11,15 @@ type ManagerWS struct {
 }
 
 // Events WS
-var enventsChan = make(chan *ManagerWS, 4)
+var enventsChan = make(chan *ManagerWS, 10)
 
 // Manager all Chanels
-var ManagerMouseChan = make(chan *Events)
-var ManagerKeybordChan = make(chan *Events)
-var ManagerKeyMouseChan = make(chan *Events)
-var ManagerLatencyChan = make(chan *ManagerWS)
-var ManagerJoystickKeyboardChan = make(chan *Events)
-var ManagerWriterChan = make(chan *Events)
+var ManagerMouseChan = make(chan *Events, 10)
+var ManagerKeybordChan = make(chan *Events, 10)
+var ManagerKeyMouseChan = make(chan *Events, 10)
+var ManagerLatencyChan = make(chan *ManagerWS, 10)
+var ManagerJoystickKeyboardChan = make(chan *Events, 10)
+var ManagerWriterChan = make(chan *Events, 10)
 
 const (
 	TypeManagerMouseChan            = 1
