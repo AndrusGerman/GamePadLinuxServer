@@ -8,7 +8,7 @@ import (
 
 func Server(mouse uinput.Mouse, keyboard uinput.Keyboard) {
 	e := echo.New()
-	e.Use(middleware.Logger())
+	//e.Use(middleware.Logger())
 	e.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
 	e.GET("/ws", handlerEvents)
 
