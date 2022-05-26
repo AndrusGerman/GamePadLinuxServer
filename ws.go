@@ -23,12 +23,16 @@ var (
 
 func handlerEvents(c echo.Context) error {
 	fmt.Println("Se conecto un cliente")
+	devicesConnect++
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return err
 	}
 	defer ws.Close()
 	defer fmt.Println("Salio cliente")
+	defer func() {
+		devicesConnect--
+	}()
 
 	for {
 		// Read

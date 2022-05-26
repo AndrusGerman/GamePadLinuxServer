@@ -9,17 +9,10 @@ import (
 
 var devicesChan = make(chan int, 2)
 var reverseADBStart = false
+var devicesConnect = 0
 
 func waitADBClients() {
 	log.Println("adbwatch: start")
-
-	var devicesConnect = 0
-
-	go func() {
-		for dv := range devicesChan {
-			devicesConnect = devicesConnect + dv
-		}
-	}()
 
 	go func() {
 		for true {
