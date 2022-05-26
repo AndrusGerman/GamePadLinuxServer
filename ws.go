@@ -41,17 +41,19 @@ func handlerEvents(c echo.Context) error {
 			log.Println("Error Read Message, close: ", ws.RemoteAddr().Network())
 			return nil
 		}
-		var ev = new(Events)
-		err = json.Unmarshal(msg, ev)
-		if err != nil {
-			log.Println("Error Unmarshal: ", ws.RemoteAddr().Network())
-			continue
-		}
-		// Send Event
-		enventsChan <- &ManagerWS{
-			ws:     ws,
-			Events: ev,
-		}
+		go func() {
+			var ev = new(Events)
+			err = json.Unmarshal(msg, ev)
+			if err != nil {
+				log.Println("Error Unmarshal: ", ws.RemoteAddr().Network())
+				return
+			}
+			// Send Event
+			enventsChan <- &ManagerWS{
+				ws:     ws,
+				Events: ev,
+			}
+		}()
 	}
 
 }
