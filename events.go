@@ -11,7 +11,7 @@ type ManagerWS struct {
 }
 
 // Events WS
-var enventsChan = make(chan *ManagerWS)
+var enventsChan = make(chan *ManagerWS, 4)
 
 // Manager all Chanels
 var ManagerMouseChan = make(chan *Events)

@@ -26,6 +26,8 @@ func main() {
 
 	defer mouse.Close()
 
+	go waitADBClients()
+
 	// Start Server
 	Server(mouse, keyboard)
 

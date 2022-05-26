@@ -14,8 +14,9 @@ func Server(mouse uinput.Mouse, keyboard uinput.Keyboard) {
 
 	e.GET("/storage/get/:name", StorageHandlerGet)
 	e.POST("/storage/set/:name", StorageHandlerSet)
+	e.GET("/open", EnabledHandlerGet)
 
 	activate_events(mouse, keyboard)
 	go proccess_events()
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":8992"))
 }
