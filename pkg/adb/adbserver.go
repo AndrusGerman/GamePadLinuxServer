@@ -1,4 +1,4 @@
-package app
+package adb
 
 import (
 	"log"
@@ -8,7 +8,7 @@ import (
 )
 
 var reverseADBStart = false
-var devicesConnect = 0
+var DevicesConnect = 0
 
 func WaitADBClients() {
 	log.Println("adbwatch: start")
@@ -17,7 +17,7 @@ func WaitADBClients() {
 		for true {
 			// Wait Devices
 			time.Sleep(time.Second * 2)
-			if devicesConnect > 0 {
+			if DevicesConnect > 0 {
 				continue
 			}
 			// IS ADB Device

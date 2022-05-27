@@ -1,6 +1,7 @@
 package app
 
 import (
+	"game_pad_linux_server/pkg/adb"
 	"game_pad_linux_server/pkg/devices"
 	"log"
 	"os"
@@ -17,7 +18,7 @@ func Execute() {
 	}
 	defer devices.Close()
 
-	go WaitADBClients()
+	go adb.WaitADBClients()
 
 	// events
 	ActivateEvents(devices)

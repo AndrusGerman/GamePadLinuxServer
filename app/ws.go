@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+	"game_pad_linux_server/pkg/adb"
 	"log"
 	"math"
 	"net/http"
@@ -23,7 +24,7 @@ var (
 
 func handlerEvents(c echo.Context) error {
 	fmt.Println("Se conecto un cliente")
-	devicesConnect++
+	adb.DevicesConnect++
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return err
@@ -31,7 +32,7 @@ func handlerEvents(c echo.Context) error {
 	defer ws.Close()
 	defer fmt.Println("Salio cliente")
 	defer func() {
-		devicesConnect--
+		adb.DevicesConnect--
 	}()
 
 	for {
