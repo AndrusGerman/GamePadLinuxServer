@@ -9,13 +9,16 @@ import (
 
 func Server(port string, devices devices.Devices) error {
 	e := echo.New()
-	//e.Use(middleware.Logger())
+	e.HideBanner = true
 	e.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
-	e.GET("/ws", handlerEvents)
 
-	e.GET("/storage/get/:name", StorageHandlerGet)
-	e.POST("/storage/set/:name", StorageHandlerSet)
+	// server route
+	e.GET("/ws", handlerEvents)
 	e.GET("/open", EnabledHandlerGet)
 
 	return e.Start(":" + port)
+}
+
+func EnabledHandlerGet(ctx echo.Context) error {
+	return ctx.String(200, "Is Open")
 }
