@@ -1,4 +1,4 @@
-package app
+package sharedstorage
 
 import (
 	"io"
@@ -37,8 +37,4 @@ func StorageHandlerGet(ctx echo.Context) error {
 	defer file.Close()
 	io.Copy(ctx.Response().Writer, file)
 	return nil
-}
-
-func EnabledHandlerGet(ctx echo.Context) error {
-	return ctx.String(200, "Is Open")
 }
