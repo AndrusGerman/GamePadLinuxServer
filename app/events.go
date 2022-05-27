@@ -100,26 +100,10 @@ func ActivateEvents(devices devices.Devices) {
 	}()
 }
 
-// func close_chanels() {
-// 	close(enventsChan)
-// 	close(ManagerMouseChan)
-// 	close(ManagerKeybordChan)
-// 	close(ManagerKeyMouseChan)
-// 	close(ManagerLatencyChan)
-// 	close(ManagerJoystickKeyboardChan)
-// 	close(ManagerWriterChan)
-// }
-
-// func start_chanels() {
-// 	// Events WS
-// 	enventsChan = make(chan *ManagerWS, 10)
-
-// 	// Manager all Chanels
-// 	ManagerMouseChan = make(chan *Events, 10)
-// 	ManagerKeybordChan = make(chan *Events, 10)
-// 	ManagerKeyMouseChan = make(chan *Events, 10)
-// 	ManagerLatencyChan = make(chan *ManagerWS, 10)
-// 	ManagerJoystickKeyboardChan = make(chan *Events, 10)
-// 	ManagerWriterChan = make(chan *Events, 10)
-
-// }
+type Events struct {
+	Type   uint
+	Value  string
+	ValueX float32
+	ValueY float32
+	Mode   uint
+}
