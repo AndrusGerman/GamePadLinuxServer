@@ -1,34 +1,29 @@
 package main
 
 import (
+	"game_pad_linux_server/pkg/devices"
 	"log"
 	"runtime"
-
-	"github.com/bendahl/uinput"
 )
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	// Create devices
-	keyboard, err := uinput.CreateKeyboard("/dev/uinput", []byte("AndrusCodex / Keyborde"))
+	devices, err := devices.CreateDevices()
 	if err != nil {
-		log.Println("Keybord: ", err)
+		log.Println("error start devices: ", err)
 		return
 	}
-	defer keyboard.Close()
-
-	mouse, err := uinput.CreateMouse("/dev/uinput", []byte("AndrusCodex / Mouse"))
-	if err != nil {
-		log.Println("Mouse: ", err)
-		return
-	}
-
-	defer mouse.Close()
+	defer devices.Close()
 
 	go waitADBClients()
 
+	// events
+	activate_events(devices)
+	go proccess_events()
+
 	// Start Server
-	Server(mouse, keyboard)
+	Server(devices)
 
 }

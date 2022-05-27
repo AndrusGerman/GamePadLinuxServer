@@ -1,7 +1,8 @@
 package main
 
 import (
-	"github.com/bendahl/uinput"
+	"game_pad_linux_server/pkg/devices"
+
 	"github.com/gorilla/websocket"
 )
 
@@ -51,7 +52,9 @@ func proccess_events() {
 	}()
 }
 
-func activate_events(mouse uinput.Mouse, keyboard uinput.Keyboard) {
+func activate_events(devices devices.Devices) {
+	var mouse = devices.GetMouse()
+	var keyboard = devices.GetKeyboard()
 	go func() {
 		for ev := range ManagerMouseChan {
 			ev.ManagerMouse(mouse)
@@ -84,3 +87,27 @@ func activate_events(mouse uinput.Mouse, keyboard uinput.Keyboard) {
 		}
 	}()
 }
+
+// func close_chanels() {
+// 	close(enventsChan)
+// 	close(ManagerMouseChan)
+// 	close(ManagerKeybordChan)
+// 	close(ManagerKeyMouseChan)
+// 	close(ManagerLatencyChan)
+// 	close(ManagerJoystickKeyboardChan)
+// 	close(ManagerWriterChan)
+// }
+
+// func start_chanels() {
+// 	// Events WS
+// 	enventsChan = make(chan *ManagerWS, 10)
+
+// 	// Manager all Chanels
+// 	ManagerMouseChan = make(chan *Events, 10)
+// 	ManagerKeybordChan = make(chan *Events, 10)
+// 	ManagerKeyMouseChan = make(chan *Events, 10)
+// 	ManagerLatencyChan = make(chan *ManagerWS, 10)
+// 	ManagerJoystickKeyboardChan = make(chan *Events, 10)
+// 	ManagerWriterChan = make(chan *Events, 10)
+
+// }

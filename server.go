@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/bendahl/uinput"
+	"game_pad_linux_server/pkg/devices"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func Server(mouse uinput.Mouse, keyboard uinput.Keyboard) {
+func Server(devices devices.Devices) {
 	e := echo.New()
 	//e.Use(middleware.Logger())
 	e.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
@@ -16,7 +17,5 @@ func Server(mouse uinput.Mouse, keyboard uinput.Keyboard) {
 	e.POST("/storage/set/:name", StorageHandlerSet)
 	e.GET("/open", EnabledHandlerGet)
 
-	activate_events(mouse, keyboard)
-	go proccess_events()
 	e.Logger.Fatal(e.Start(":8992"))
 }
