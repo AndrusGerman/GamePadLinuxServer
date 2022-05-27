@@ -1,11 +1,12 @@
 package app
 
 import (
+	"log"
 	"strings"
 	"unicode"
 
 	"github.com/bendahl/uinput"
-	"github.com/go-vgo/robotgo"
+	//"github.com/go-vgo/robotgo"
 )
 
 func (ctx *Events) ManagerWriter(keyboard uinput.Keyboard) {
@@ -33,6 +34,7 @@ func (ctx *Events) ManagerWriter(keyboard uinput.Keyboard) {
 		}
 
 	} else {
-		robotgo.TypeStr(ctx.Value)
+		//robotgo.TypeStr(ctx.Value)
+		log.Println("not implemented")
 	}
 }
