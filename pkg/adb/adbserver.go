@@ -1,18 +1,21 @@
 package adb
 
 import (
+	"fmt"
 	"log"
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/labstack/gommon/color"
 )
 
 var reverseADBStart = false
 var DevicesConnect = 0
 
 func WaitADBClients() {
-	log.Println("adbwatch: start")
-	log.Println("adbwatch: adb allows connection via usb, usb debugging has to be active on your cell phone")
+	fmt.Println(color.Grey("GamePad-adbwath: is start"))
+	fmt.Println(color.Grey("GamePad-adbwath: adb allows connection via usb, usb debugging has to be active on your cell phone"))
 
 	go func() {
 		for true {
@@ -24,7 +27,7 @@ func WaitADBClients() {
 			// IS ADB Device
 			devices, err := verifyDeviceConnects()
 			if err != nil {
-				log.Println("adbwatch: Brack devices find adb, ", err)
+				log.Println("GamePad-adbwath: Brack devices find adb, ", err)
 				break
 			}
 
@@ -44,18 +47,18 @@ func connectReverseAdb(devices []string) {
 		return
 	}
 
-	log.Println("adbwatch: List devices Found: ", devices)
+	fmt.Println(color.Grey("GamePad-adbwath: List devices Found: "), devices)
 
 	cmd := exec.Command("adb", "reverse", "tcp:8992", "tcp:8992")
 
 	_, err := cmd.Output()
 	if err != nil {
-		log.Println("adbwatch: Error create reverse adb ", err)
-		log.Println("adbwatch: If adb is not available the usb connection will not be usable")
+		log.Println("GamePad-adbwath: Error create reverse adb ", err)
+		log.Println("GamePad-adbwath: If adb is not available the usb connection will not be usable")
 		return
 	}
 	reverseADBStart = true
-	log.Println("adbwatch: reverse connection complete")
+	fmt.Println(color.Green("GamePad-adbwath: reverse connection complete"))
 }
 
 func verifyDeviceConnects() ([]string, error) {
