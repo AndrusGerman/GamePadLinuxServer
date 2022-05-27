@@ -1,4 +1,4 @@
-package app
+package events
 
 import "github.com/bendahl/uinput"
 

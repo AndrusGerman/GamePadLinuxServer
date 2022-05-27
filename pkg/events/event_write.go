@@ -1,6 +1,7 @@
-package app
+package events
 
 import (
+	"game_pad_linux_server/pkg/utils"
 	"log"
 	"strings"
 	"unicode"
@@ -24,7 +25,7 @@ func (ctx *Events) ManagerWriter(keyboard uinput.Keyboard) {
 		return
 	}
 
-	if value, ok := keyMap[strings.ToUpper(ctx.Value)]; ok {
+	if value, ok := utils.KeyMap[strings.ToUpper(ctx.Value)]; ok {
 		if unicode.IsLetter(rune(ctx.Value[0])) && strings.ToUpper(ctx.Value) == ctx.Value {
 			keyboard.KeyDown(uinput.KeyLeftshift)
 			keyboard.KeyPress(int(value))

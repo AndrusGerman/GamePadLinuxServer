@@ -1,6 +1,6 @@
-package app
+package utils
 
-var keyMap = map[string]uint{
+var KeyMap = map[string]uint{
 	"Esc":              1,
 	"1":                2,
 	"2":                3,

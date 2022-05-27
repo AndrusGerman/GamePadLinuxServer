@@ -1,6 +1,7 @@
-package app
+package events
 
 import (
+	"game_pad_linux_server/pkg/utils"
 	"strings"
 
 	"github.com/bendahl/uinput"
@@ -15,7 +16,7 @@ func (ctx *Events) ManagerJoystickKeyboard(keyboard uinput.Keyboard) {
 		for _, key := range keyRemove {
 
 			// Suelta las demas
-			vl, ok := keyMap[key]
+			vl, ok := utils.KeyMap[key]
 			if ok {
 				keyboard.KeyUp(int(vl))
 			}
@@ -25,7 +26,7 @@ func (ctx *Events) ManagerJoystickKeyboard(keyboard uinput.Keyboard) {
 		for _, key := range keysAdd {
 
 			// Preciona la selecionada
-			vl, ok := keyMap[key]
+			vl, ok := utils.KeyMap[key]
 			if ok {
 				keyboard.KeyDown(int(vl))
 			}
@@ -35,7 +36,7 @@ func (ctx *Events) ManagerJoystickKeyboard(keyboard uinput.Keyboard) {
 		keys := strings.Split(ctx.Value, ",")
 		for _, v := range keys {
 			// Suelta la tecla
-			vl, ok := keyMap[v]
+			vl, ok := utils.KeyMap[v]
 			if ok {
 				keyboard.KeyUp(int(vl))
 			}

@@ -1,4 +1,4 @@
-package app
+package events
 
 import (
 	"game_pad_linux_server/pkg/devices"
@@ -8,11 +8,11 @@ import (
 
 type ManagerWS struct {
 	*Events
-	ws *websocket.Conn
+	WS *websocket.Conn
 }
 
 // Events WS
-var enventsChan = make(chan *ManagerWS, 10)
+var EnventsChan = make(chan *ManagerWS, 10)
 
 // Manager all Chanels
 var ManagerMouseChan = make(chan *Events, 10)
@@ -33,7 +33,7 @@ const (
 
 func ProccessEvents() {
 	go func() {
-		for ev := range enventsChan {
+		for ev := range EnventsChan {
 			switch ev.Type {
 			case TypeManagerMouseChan:
 				ManagerMouseChan <- ev.Events
@@ -80,7 +80,7 @@ func ActivateEvents(devices devices.Devices) {
 	// Get Latency Events
 	go func() {
 		for ev := range ManagerLatencyChan {
-			ev.ManagerLatency(ev.ws)
+			ev.ManagerLatency(ev.WS)
 		}
 	}()
 

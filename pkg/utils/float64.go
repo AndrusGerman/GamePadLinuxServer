@@ -1,6 +1,6 @@
-package app
+package utils
 
-func getPositive(value float64) float64 {
+func GetPositive(value float64) float64 {
 	if value < 0 {
 		return value * -1
 	}
@@ -8,7 +8,7 @@ func getPositive(value float64) float64 {
 }
 
 // returns the number with the positive or negative value depending on the source
-func returnValueInSRC(value float64, src float64) float64 {
+func ReturnValueInSRC(value float64, src float64) float64 {
 	var isNegative = src < 0
 	if value > 0 && !isNegative {
 		return value

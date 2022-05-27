@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"game_pad_linux_server/pkg/adb"
+	"game_pad_linux_server/pkg/events"
 	"log"
 	"net/http"
 
@@ -39,15 +40,16 @@ func handlerEvents(c echo.Context) error {
 			return nil
 		}
 		go func() {
-			var ev = new(Events)
+			var ev = new(events.Events)
 			err = json.Unmarshal(msg, ev)
 			if err != nil {
 				log.Println("Error Unmarshal: ", err)
 				return
 			}
+
 			// Send Event
-			enventsChan <- &ManagerWS{
-				ws:     ws,
+			events.EnventsChan <- &events.ManagerWS{
+				WS:     ws,
 				Events: ev,
 			}
 		}()

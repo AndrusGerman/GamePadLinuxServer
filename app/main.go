@@ -3,6 +3,7 @@ package app
 import (
 	"game_pad_linux_server/pkg/adb"
 	"game_pad_linux_server/pkg/devices"
+	"game_pad_linux_server/pkg/events"
 	"log"
 	"os"
 )
@@ -21,8 +22,8 @@ func Execute() {
 	go adb.WaitADBClients()
 
 	// events
-	ActivateEvents(devices)
-	go ProccessEvents()
+	events.ActivateEvents(devices)
+	go events.ProccessEvents()
 
 	// Start Server
 	err = Server("8992", devices)

@@ -1,6 +1,7 @@
-package app
+package events
 
 import (
+	"game_pad_linux_server/pkg/utils"
 	"math"
 	"time"
 
@@ -27,11 +28,12 @@ func (ctx *Events) UsedMouse(mouse uinput.Mouse) {
 
 		// set min speed percent 30%
 		// the minimum speed cannot be less than 30 percent of the initial value
-		if getPositive(xPercent) < 0.3 {
-			xPercent = returnValueInSRC(0.3, xPercent)
+		if utils.GetPositive(xPercent) < 0.3 {
+			xPercent = utils.ReturnValueInSRC(0.3, xPercent)
 		}
-		if getPositive(yPercent) < 0.3 {
-			yPercent = returnValueInSRC(0.3, yPercent)
+
+		if utils.GetPositive(yPercent) < 0.3 {
+			yPercent = utils.ReturnValueInSRC(0.3, yPercent)
 		}
 
 		// Percent speed
