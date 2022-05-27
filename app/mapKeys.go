@@ -1,4 +1,4 @@
-package main
+package app
 
 var keyMap = map[string]uint{
 	"Esc":              1,

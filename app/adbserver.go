@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"log"
@@ -7,11 +7,10 @@ import (
 	"time"
 )
 
-var devicesChan = make(chan int, 2)
 var reverseADBStart = false
 var devicesConnect = 0
 
-func waitADBClients() {
+func WaitADBClients() {
 	log.Println("adbwatch: start")
 
 	go func() {

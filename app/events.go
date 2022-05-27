@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"game_pad_linux_server/pkg/devices"
@@ -31,7 +31,7 @@ const (
 	TypeManagerWriterChan           = 7
 )
 
-func proccess_events() {
+func ProccessEvents() {
 	go func() {
 		for ev := range enventsChan {
 			switch ev.Type {
@@ -52,7 +52,7 @@ func proccess_events() {
 	}()
 }
 
-func activate_events(devices devices.Devices) {
+func ActivateEvents(devices devices.Devices) {
 	var mouse = devices.GetMouse()
 	var keyboard = devices.GetKeyboard()
 	go func() {
