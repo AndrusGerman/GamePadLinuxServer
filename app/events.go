@@ -55,32 +55,44 @@ func ProccessEvents() {
 func ActivateEvents(devices devices.Devices) {
 	var mouse = devices.GetMouse()
 	var keyboard = devices.GetKeyboard()
+
+	// Get Mouse Events
 	go func() {
 		for ev := range ManagerMouseChan {
 			ev.ManagerMouse(mouse)
 		}
 	}()
 
+	// get Keyboard Events
 	go func() {
 		for ev := range ManagerKeybordChan {
 			ev.ManagerKeybord(keyboard)
 		}
 	}()
+
+	// Get Mouse Clicks
 	go func() {
 		for ev := range ManagerKeyMouseChan {
 			ev.ManagerKeyMouse(mouse)
 		}
 	}()
+
+	// Get Latency Events
 	go func() {
 		for ev := range ManagerLatencyChan {
 			ev.ManagerLatency(ev.ws)
 		}
 	}()
+
+	// Get Joystick to Keyboard
 	go func() {
 		for ev := range ManagerJoystickKeyboardChan {
 			ev.ManagerJoystickKeyboard(keyboard)
 		}
 	}()
+
+	// Get Writers events
+
 	go func() {
 		for ev := range ManagerWriterChan {
 			ev.ManagerWriter(keyboard)
