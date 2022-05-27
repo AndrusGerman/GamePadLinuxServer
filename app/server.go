@@ -10,6 +10,7 @@ import (
 func Server(port string, devices devices.Devices) error {
 	e := echo.New()
 	e.HideBanner = true
+	e.HidePort = true
 	e.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
 
 	// server route
