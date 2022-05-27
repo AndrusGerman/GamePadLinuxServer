@@ -31,6 +31,7 @@ const (
 	TypeManagerWriterChan           = 7
 )
 
+// send the events, to the device's event handler
 func ProccessEvents() {
 	go func() {
 		for ev := range EnventsChan {
@@ -52,6 +53,7 @@ func ProccessEvents() {
 	}()
 }
 
+// activate the devices event handler
 func ActivateEvents(devices devices.Devices) {
 	var mouse = devices.GetMouse()
 	var keyboard = devices.GetKeyboard()

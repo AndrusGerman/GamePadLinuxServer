@@ -12,6 +12,7 @@ var DevicesConnect = 0
 
 func WaitADBClients() {
 	log.Println("adbwatch: start")
+	log.Println("adbwatch: adb allows connection via usb, usb debugging has to be active on your cell phone")
 
 	go func() {
 		for true {
@@ -49,7 +50,8 @@ func connectReverseAdb(devices []string) {
 
 	_, err := cmd.Output()
 	if err != nil {
-		log.Println("adbwatch: Error create reverse adb")
+		log.Println("adbwatch: Error create reverse adb ", err)
+		log.Println("adbwatch: If adb is not available the usb connection will not be usable")
 		return
 	}
 	reverseADBStart = true
