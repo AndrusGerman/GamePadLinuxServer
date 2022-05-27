@@ -24,7 +24,7 @@ func Execute() {
 	go ProccessEvents()
 
 	// Start Server
-	Server(devices)
+	err = Server("8992", devices)
 	if err != nil {
 		log.Println("error start server: ", err)
 		os.Exit(1)

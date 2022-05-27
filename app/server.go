@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func Server(devices devices.Devices) error {
+func Server(port string, devices devices.Devices) error {
 	e := echo.New()
 	//e.Use(middleware.Logger())
 	e.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
@@ -17,5 +17,5 @@ func Server(devices devices.Devices) error {
 	e.POST("/storage/set/:name", StorageHandlerSet)
 	e.GET("/open", EnabledHandlerGet)
 
-	return e.Start(":8992")
+	return e.Start(":" + port)
 }
