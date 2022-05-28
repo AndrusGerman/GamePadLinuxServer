@@ -8,8 +8,22 @@ import (
 	"github.com/bendahl/uinput"
 )
 
+// how often the mouse position changes, latency between changes mouse
+func init() {
+	go func() {
+		for {
+			if universalMouse != nil {
+				if pxEvent != nil {
+					pxEvent.UsedMouse(universalMouse)
+				}
+			}
+			time.Sleep(6 * time.Millisecond)
+		}
+	}()
+}
+
 // maximum mouse speed
-var pxMovementMax float64 = 12
+var pxMovementMax float64 = 6
 
 func (ctx *Events) UsedMouse(mouse uinput.Mouse) {
 	switch ctx.Mode {
@@ -57,39 +71,13 @@ func (ctx *Events) UsedMouse(mouse uinput.Mouse) {
 
 // Need refactor
 var pxEvent *Events
-var move = true
 var universalMouse uinput.Mouse
-
-// reset move mouse
-func clearMove() {
-	go func() {
-		time.Sleep(6 * time.Millisecond)
-		move = true
-	}()
-}
-
-func init() {
-	go func() {
-		for {
-			if universalMouse != nil {
-				if pxEvent != nil {
-					pxEvent.UsedMouse(universalMouse)
-				}
-			}
-			time.Sleep(16 * time.Millisecond)
-		}
-	}()
-}
 
 func (ctx *Events) ManagerMouse(mouse uinput.Mouse) {
 	switch ctx.Mode {
 	case 3:
 		pxEvent = nil
 	case 1:
-		if move {
-			move = false
-			clearMove()
-		}
 		universalMouse = mouse
 		pxEvent = ctx
 	}
