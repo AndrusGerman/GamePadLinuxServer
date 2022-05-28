@@ -31,6 +31,9 @@ jobs:
       
     - name: Prepare X11-xinerama
       run: sudo apt-get install libxinerama-dev
+      
+    - name: Prepare OpenGL api
+      run: sudo apt-get install libgl1-mesa-dev
 
     - name: Set up Go
       uses: actions/setup-go@v3
