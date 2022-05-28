@@ -3,8 +3,8 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"game_pad_linux_server/pkg/adb"
 	"game_pad_linux_server/pkg/events"
+	"game_pad_linux_server/pkg/utils"
 	"log"
 
 	"github.com/labstack/echo/v4"
@@ -12,16 +12,14 @@ import (
 
 func (ctx *ServerManagerDefault) handlerEvents(c echo.Context) error {
 	fmt.Println("Se conecto un cliente")
-	adb.DevicesConnect++
+	utils.SumDevicesConnect(1)
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return err
 	}
 	defer ws.Close()
 	defer fmt.Println("Salio cliente")
-	defer func() {
-		adb.DevicesConnect--
-	}()
+	defer utils.SumDevicesConnect(-1)
 
 	// events
 	evmanager := events.NewEventsManager(ctx.devices)

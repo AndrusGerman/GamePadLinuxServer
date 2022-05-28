@@ -16,7 +16,6 @@ type ServerManagerDefault struct {
 }
 
 func (ctx *ServerManagerDefault) Server(port string) error {
-
 	ctx.server = echo.New()
 	ctx.server.HideBanner = true
 	ctx.server.HidePort = true
@@ -35,5 +34,8 @@ func (*ServerManagerDefault) enabledHandlerGet(ctx echo.Context) error {
 }
 
 func (ctx *ServerManagerDefault) Close() error {
+	if ctx.server == nil {
+		return nil
+	}
 	return ctx.server.Close()
 }

@@ -2,6 +2,7 @@ package adb
 
 import (
 	"fmt"
+	"game_pad_linux_server/pkg/utils"
 	"log"
 	"os/exec"
 	"strings"
@@ -11,7 +12,6 @@ import (
 )
 
 var reverseADBStart = false
-var DevicesConnect = 0
 
 func WaitADBClients() {
 	fmt.Println(color.Grey("GamePad-adbwath: is start"))
@@ -21,7 +21,7 @@ func WaitADBClients() {
 		for true {
 			// Wait Devices
 			time.Sleep(time.Second * 2)
-			if DevicesConnect > 0 {
+			if utils.GetDevicesConnect() > 0 {
 				continue
 			}
 			// IS ADB Device

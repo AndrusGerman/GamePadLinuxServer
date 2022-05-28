@@ -3,7 +3,7 @@ module game_pad_linux_server
 go 1.16
 
 require (
-	fyne.io/fyne/v2 v2.1.4 // indirect
+	fyne.io/fyne/v2 v2.1.4
 	github.com/bendahl/uinput v1.4.1
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gorilla/websocket v1.4.2
