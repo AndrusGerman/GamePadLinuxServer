@@ -2,6 +2,7 @@ package adb
 
 import (
 	"fmt"
+	"game_pad_linux_server/pkg/usbwatch"
 	"game_pad_linux_server/pkg/utils"
 	"log"
 	"os/exec"
@@ -16,29 +17,37 @@ var reverseADBStart = false
 func WaitADBClients() {
 	fmt.Println(color.Grey("GamePad-adbwath: is start"))
 	fmt.Println(color.Grey("GamePad-adbwath: adb allows connection via usb, usb debugging has to be active on your cell phone"))
+	scanAdb()
+	watch, err := usbwatch.NewUSBWatch()
+	if err != nil {
+		fmt.Println(color.Red("GamePad-adbwath: error start usb watch "), err)
+		return
+	}
+	defer watch.Close()
 
-	go func() {
-		for true {
-			// Wait Devices
-			time.Sleep(time.Second * 2)
-			if utils.GetDevicesConnect() > 0 {
-				continue
-			}
-			// IS ADB Device
-			devices, err := verifyDeviceConnects()
-			if err != nil {
-				log.Println("GamePad-adbwath: Brack devices find adb, ", err)
-				break
-			}
+	watch.WatchOn(scanAdb, scanAdb)
+}
 
-			// adb
-			connectReverseAdb(devices)
+func scanAdb() {
+	// Wait Devices
+	time.Sleep(time.Second * 2)
+	if utils.GetDevicesConnect() > 0 {
+		return
+	}
+	// IS ADB Device
+	devices, err := verifyDeviceConnects()
+	if err != nil {
+		log.Println("GamePad-adbwath: Brack devices find adb, ", err)
+		return
+	}
 
-		}
-	}()
+	// adb
+	connectReverseAdb(devices)
 }
 
 func connectReverseAdb(devices []string) {
+	fmt.Println(color.Grey("GamePad-adbwath: List devices Found: "), devices)
+
 	if len(devices) == 0 {
 		reverseADBStart = false
 		return
@@ -47,10 +56,7 @@ func connectReverseAdb(devices []string) {
 		return
 	}
 
-	fmt.Println(color.Grey("GamePad-adbwath: List devices Found: "), devices)
-
 	cmd := exec.Command("adb", "reverse", "tcp:8992", "tcp:8992")
-
 	_, err := cmd.Output()
 	if err != nil {
 		log.Println("GamePad-adbwath: Error create reverse adb ", err)
