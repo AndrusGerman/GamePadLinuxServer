@@ -28,6 +28,9 @@ jobs:
       
     - name: Prepare X11-input
       run: sudo apt-get install libxi-dev
+      
+    - name: Prepare X11-xinerama
+      run: sudo apt-get install libxinerama-dev
 
     - name: Set up Go
       uses: actions/setup-go@v3
