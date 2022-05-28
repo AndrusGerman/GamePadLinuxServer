@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"game_pad_linux_server/pkg/devices"
 	"game_pad_linux_server/pkg/utils"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -37,5 +38,10 @@ func (ctx *ServerManagerDefault) Close() error {
 	if ctx.server == nil {
 		return nil
 	}
-	return ctx.server.Close()
+	err := ctx.server.Close()
+	if err != nil {
+		return err
+	}
+	time.Sleep(time.Second)
+	return nil
 }

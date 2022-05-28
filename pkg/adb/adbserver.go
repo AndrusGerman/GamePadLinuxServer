@@ -35,17 +35,18 @@ func scanAdb() {
 		return
 	}
 	// IS ADB Device
-	devices, err := verifyDeviceConnects()
+	err := verifyDeviceConnects()
 	if err != nil {
 		log.Println("GamePad-adbwath: Brack devices find adb, ", err)
 		return
 	}
 
 	// adb
-	connectReverseAdb(devices)
+	connectReverseAdb()
 }
 
-func connectReverseAdb(devices []string) {
+func connectReverseAdb() {
+	devices := utils.GetDevicesList()
 	fmt.Println(color.Grey("GamePad-adbwath: List devices Found: "), devices)
 
 	if len(devices) == 0 {
@@ -67,13 +68,13 @@ func connectReverseAdb(devices []string) {
 	fmt.Println(color.Green("GamePad-adbwath: reverse connection complete"))
 }
 
-func verifyDeviceConnects() ([]string, error) {
+func verifyDeviceConnects() error {
 
 	cmd := exec.Command("adb", "devices", "-l")
 
 	bt, err := cmd.Output()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	spl := strings.Split(string(bt), " ")
@@ -85,6 +86,9 @@ func verifyDeviceConnects() ([]string, error) {
 			devices = append(devices, strings.Split(v, ":")[1])
 		}
 	}
+
+	// set device list
+	utils.DevicesList.Set(devices)
 	// Found Devices
-	return devices, nil
+	return nil
 }

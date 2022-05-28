@@ -15,8 +15,14 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func Execute() {
+var primaryLabelText = "GamePadLinux:"
+var statusServer = binding.NewString()
 
+func setStatus(status string) {
+	statusServer.Set(primaryLabelText + " (" + status + ")")
+}
+
+func Execute() {
 	// Create devices
 	devices, err := devices.CreateDevices()
 	if err != nil {
@@ -36,7 +42,14 @@ func Execute() {
 
 	w.Resize(fyne.NewSize(400, 200))
 
-	title := widget.NewLabel("GamePadLinux: (Client GUI)")
+	title := widget.NewLabel(primaryLabelText)
+	title.Bind(statusServer)
+
+	setStatus("Server Close")
+
+	title.TextStyle.Bold = true
+
+	ipText := widget.NewLabel("IP:// ")
 
 	bindDevicesCount := binding.IntToStringWithFormat(utils.DevicesConnect, "Devices connect: %d")
 
@@ -45,33 +58,63 @@ func Execute() {
 	devicesConnect.Bind(bindDevicesCount)
 
 	ips := utils.GetLocalIP()
-	list := widget.NewList(
+	listIP := widget.NewList(
 		func() int {
 			return len(ips)
 		},
 		func() fyne.CanvasObject {
 			return widget.NewLabel("template")
 		},
-		func(i widget.ListItemID, o fyne.CanvasObject) {
-			o.(*widget.Label).SetText(ips[i])
+		func(i widget.ListItemID, co fyne.CanvasObject) {
+			co.(*widget.Label).SetText(ips[i])
 		})
 
-	startServer := widget.NewButton("Start Server", func() {
+	listDevicesText := widget.NewLabel("Devices USB:")
+
+	listDevices := widget.NewListWithData(
+		utils.DevicesList,
+		func() fyne.CanvasObject {
+			return widget.NewLabel("template")
+		},
+		func(di binding.DataItem, co fyne.CanvasObject) {
+			co.(*widget.Label).Bind(di.(binding.String))
+		})
+
+	var startServer *widget.Button
+	startServer = widget.NewButton("Start Server", func() {
+		startServer.SetText("Waiting...")
+		startServer.Disable()
 		server.Close()
+		setStatus("Server Start")
 		go func() {
+			startServer.Enable()
+			startServer.SetText("Restart Server")
 			err := server.Server("8992")
 			if err != nil {
+				setStatus("Server close...")
 				log.Println("error start server: ", err)
 				return
 			}
+			startServer.SetText("Start Server")
 		}()
 	})
 
+	listContainer := container.NewGridWithColumns(2,
+		container.NewVBox(
+			ipText,
+			listIP),
+		container.NewVBox(
+			listDevicesText,
+			listDevices),
+	)
+
 	w.SetContent(container.NewVBox(
 		title,
-		list,
-		devicesConnect,
+
+		listContainer,
+
 		startServer,
+		devicesConnect,
 	))
 
 	w.ShowAndRun()
