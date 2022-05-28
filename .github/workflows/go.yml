@@ -21,6 +21,9 @@ jobs:
       
     - name: Prepare X11-devs
       run: sudo apt-get install libx11-dev
+      
+    - name: Prepare X11-cursor
+      run: sudo apt-get install libxcursor-dev
 
     - name: Set up Go
       uses: actions/setup-go@v3
