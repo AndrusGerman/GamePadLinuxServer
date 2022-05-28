@@ -8,22 +8,25 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/color"
 )
 
 func (ctx *ServerManagerDefault) handlerEvents(c echo.Context) error {
-	fmt.Println("Se conecto un cliente")
+	fmt.Println(color.Grey("gamepad-server: A device connected"))
 	utils.SumDevicesConnect(1)
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
 		return err
 	}
 	defer ws.Close()
-	defer fmt.Println("Salio cliente")
+	defer fmt.Println(color.Grey("gamepad-server: A device disconnected"))
 	defer utils.SumDevicesConnect(-1)
 
 	// events
 	evmanager := events.NewEventsManager(ctx.devices)
 	defer evmanager.Close()
+
+	var event = evmanager.GetEnventsChan()
 
 	for {
 		// Read
@@ -42,7 +45,7 @@ func (ctx *ServerManagerDefault) handlerEvents(c echo.Context) error {
 			}
 
 			// Send Event
-			evmanager.GetEnventsChan() <- &events.ManagerWS{
+			event <- &events.ManagerWS{
 				WS:     ws,
 				Events: ev,
 			}
