@@ -10,14 +10,13 @@ import (
 	"fyne.io/fyne/v2/app"
 )
 
-func create_app() (fyne.Window, *server.ServerManagerDefault) {
+func create_app() (fyne.Window, *server.ServerManagerDefault, *devices.DefaultDevices) {
 	// Create devices
 	devices, err := devices.CreateDevices()
 	if err != nil {
 		log.Println("error start devices: ", err)
 		os.Exit(1)
 	}
-	defer devices.Close()
 
 	// Start Server
 	server := server.NewServer(devices)
@@ -27,5 +26,5 @@ func create_app() (fyne.Window, *server.ServerManagerDefault) {
 	w := a.NewWindow("GamePadLinux: AndrusCodex")
 
 	w.Resize(fyne.NewSize(400, 200))
-	return w, server
+	return w, server, devices
 }

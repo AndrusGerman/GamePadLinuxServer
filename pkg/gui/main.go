@@ -24,7 +24,8 @@ func Execute() {
 
 	setStatus("Server Close")
 	// Create devices
-	w, server := create_app()
+	w, server, devices := create_app()
+	defer devices.Close()
 
 	// title status
 	title := createTitle()
