@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Prepare X11
+      run: apt-get install xorg
 
     - name: Set up Go
       uses: actions/setup-go@v3
