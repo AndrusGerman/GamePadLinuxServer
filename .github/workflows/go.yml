@@ -18,6 +18,9 @@ jobs:
     
     - name: Prepare X11
       run: sudo apt-get install xorg
+      
+    - name: Prepare X11-devs
+      run: sudo apt-get install libx11-dev
 
     - name: Set up Go
       uses: actions/setup-go@v3
