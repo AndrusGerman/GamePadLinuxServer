@@ -3,13 +3,12 @@ package app
 import (
 	"game_pad_linux_server/pkg/adb"
 	"game_pad_linux_server/pkg/devices"
-	"game_pad_linux_server/pkg/events"
+	"game_pad_linux_server/pkg/server"
 	"log"
 	"os"
 )
 
 func Execute() {
-
 	// Create devices
 	devices, err := devices.CreateDevices()
 	if err != nil {
@@ -21,12 +20,9 @@ func Execute() {
 
 	go adb.WaitADBClients()
 
-	// events
-	events.ActivateEvents(devices)
-	go events.ProccessEvents()
-
 	// Start Server
-	err = Server("8992", devices)
+	server := server.NewServer(devices)
+	err = server.Server("8992")
 	if err != nil {
 		log.Println("error start server: ", err)
 		os.Exit(1)

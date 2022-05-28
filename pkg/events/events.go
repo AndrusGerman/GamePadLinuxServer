@@ -11,17 +11,6 @@ type ManagerWS struct {
 	WS *websocket.Conn
 }
 
-// Events WS
-var EnventsChan = make(chan *ManagerWS, 10)
-
-// Manager all Chanels
-var ManagerMouseChan = make(chan *Events, 10)
-var ManagerKeybordChan = make(chan *Events, 10)
-var ManagerKeyMouseChan = make(chan *Events, 10)
-var ManagerLatencyChan = make(chan *ManagerWS, 10)
-var ManagerJoystickKeyboardChan = make(chan *Events, 10)
-var ManagerWriterChan = make(chan *Events, 10)
-
 const (
 	TypeManagerMouseChan            = 1
 	TypeManagerKeybordChan          = 2
@@ -31,81 +20,119 @@ const (
 	TypeManagerWriterChan           = 7
 )
 
-// send the events, to the device's event handler
-func ProccessEvents() {
-	go func() {
-		for ev := range EnventsChan {
-			switch ev.Type {
-			case TypeManagerMouseChan:
-				ManagerMouseChan <- ev.Events
-			case TypeManagerKeybordChan:
-				ManagerKeybordChan <- ev.Events
-			case TypeManagerKeyMouseChan:
-				ManagerKeyMouseChan <- ev.Events
-			case TypeManagerLatencyChan:
-				ManagerLatencyChan <- ev
-			case TypeManagerJoystickKeyboardChan:
-				ManagerJoystickKeyboardChan <- ev.Events
-			case TypeManagerWriterChan:
-				ManagerWriterChan <- ev.Events
-			}
-		}
-	}()
-}
-
-// activate the devices event handler
-func ActivateEvents(devices devices.Devices) {
-	var mouse = devices.GetMouse()
-	var keyboard = devices.GetKeyboard()
-
-	// Get Mouse Events
-	go func() {
-		for ev := range ManagerMouseChan {
-			ev.ManagerMouse(mouse)
-		}
-	}()
-
-	// get Keyboard Events
-	go func() {
-		for ev := range ManagerKeybordChan {
-			ev.ManagerKeybord(keyboard)
-		}
-	}()
-
-	// Get Mouse Clicks
-	go func() {
-		for ev := range ManagerKeyMouseChan {
-			ev.ManagerKeyMouse(mouse)
-		}
-	}()
-
-	// Get Latency Events
-	go func() {
-		for ev := range ManagerLatencyChan {
-			ev.ManagerLatency(ev.WS)
-		}
-	}()
-
-	// Get Joystick to Keyboard
-	go func() {
-		for ev := range ManagerJoystickKeyboardChan {
-			ev.ManagerJoystickKeyboard(keyboard)
-		}
-	}()
-
-	// Get Writers events
-
-	go func() {
-		for ev := range ManagerWriterChan {
-			ev.ManagerWriter(keyboard)
-		}
-	}()
-}
-
 type Events struct {
 	Type   uint
 	Value  string
 	ValueX float32
 	ValueY float32
 	Mode   uint
+}
+
+func (ctx *EventsManagerDefault) StartChanels() {
+	// Events WS
+	ctx.EnventsChan = make(chan *ManagerWS, 10)
+
+	// Manager all Chanels
+	ctx.ManagerMouseChan = make(chan *Events, 10)
+	ctx.ManagerKeybordChan = make(chan *Events, 10)
+	ctx.ManagerKeyMouseChan = make(chan *Events, 10)
+	ctx.ManagerLatencyChan = make(chan *ManagerWS, 10)
+	ctx.ManagerJoystickKeyboardChan = make(chan *Events, 10)
+	ctx.ManagerWriterChan = make(chan *Events, 10)
+}
+
+func (ctx *EventsManagerDefault) CloseChanels() {
+	// Events WS
+	close(ctx.EnventsChan)
+
+	// Manager all Chanels
+	close(ctx.ManagerMouseChan)
+	close(ctx.ManagerKeybordChan)
+	close(ctx.ManagerKeyMouseChan)
+	close(ctx.ManagerLatencyChan)
+	close(ctx.ManagerJoystickKeyboardChan)
+	close(ctx.ManagerWriterChan)
+}
+
+func (ctx *EventsManagerDefault) Close() error {
+	ctx.CloseChanels()
+	return nil
+}
+
+// send the events, to the device's event handler
+func (ctx *EventsManagerDefault) ProccessEvents() {
+	go func() {
+		for ev := range ctx.EnventsChan {
+			switch ev.Type {
+			case TypeManagerMouseChan:
+				ctx.ManagerMouseChan <- ev.Events
+			case TypeManagerKeybordChan:
+				ctx.ManagerKeybordChan <- ev.Events
+			case TypeManagerKeyMouseChan:
+				ctx.ManagerKeyMouseChan <- ev.Events
+			case TypeManagerLatencyChan:
+				ctx.ManagerLatencyChan <- ev
+			case TypeManagerJoystickKeyboardChan:
+				ctx.ManagerJoystickKeyboardChan <- ev.Events
+			case TypeManagerWriterChan:
+				ctx.ManagerWriterChan <- ev.Events
+			}
+		}
+	}()
+}
+
+func (ctx *EventsManagerDefault) SetDevices(devices devices.Devices) {
+	ctx.devices = devices
+	ctx.mouse = devices.GetMouse()
+	ctx.keyboard = devices.GetKeyboard()
+}
+
+// activate the devices event handler
+func (ctx *EventsManagerDefault) ActivateEvents() {
+
+	// Get Mouse Events
+	go func() {
+		for ev := range ctx.ManagerMouseChan {
+			ev.ManagerMouse(ctx.mouse)
+		}
+	}()
+
+	// get Keyboard Events
+	go func() {
+		for ev := range ctx.ManagerKeybordChan {
+			ev.ManagerKeybord(ctx.keyboard)
+		}
+	}()
+
+	// Get Mouse Clicks
+	go func() {
+		for ev := range ctx.ManagerKeyMouseChan {
+			ev.ManagerKeyMouse(ctx.mouse)
+		}
+	}()
+
+	// Get Latency Events
+	go func() {
+		for ev := range ctx.ManagerLatencyChan {
+			ev.ManagerLatency(ev.WS)
+		}
+	}()
+
+	// Get Joystick to Keyboard
+	go func() {
+		for ev := range ctx.ManagerJoystickKeyboardChan {
+			ev.ManagerJoystickKeyboard(ctx.keyboard)
+		}
+	}()
+
+	// Get Writers events
+	go func() {
+		for ev := range ctx.ManagerWriterChan {
+			ev.ManagerWriter(ctx.keyboard)
+		}
+	}()
+}
+
+func (ctx *EventsManagerDefault) GetEnventsChan() chan *ManagerWS {
+	return ctx.EnventsChan
 }

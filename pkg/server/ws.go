@@ -1,4 +1,4 @@
-package app
+package server
 
 import (
 	"encoding/json"
@@ -6,19 +6,11 @@ import (
 	"game_pad_linux_server/pkg/adb"
 	"game_pad_linux_server/pkg/events"
 	"log"
-	"net/http"
 
-	"github.com/gorilla/websocket"
 	"github.com/labstack/echo/v4"
 )
 
-var (
-	upgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool {
-		return true
-	}}
-)
-
-func handlerEvents(c echo.Context) error {
+func (ctx *ServerManagerDefault) handlerEvents(c echo.Context) error {
 	fmt.Println("Se conecto un cliente")
 	adb.DevicesConnect++
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
@@ -30,6 +22,10 @@ func handlerEvents(c echo.Context) error {
 	defer func() {
 		adb.DevicesConnect--
 	}()
+
+	// events
+	evmanager := events.NewEventsManager(ctx.devices)
+	defer evmanager.Close()
 
 	for {
 		// Read
@@ -48,7 +44,7 @@ func handlerEvents(c echo.Context) error {
 			}
 
 			// Send Event
-			events.EnventsChan <- &events.ManagerWS{
+			evmanager.GetEnventsChan() <- &events.ManagerWS{
 				WS:     ws,
 				Events: ev,
 			}
