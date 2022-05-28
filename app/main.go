@@ -1,14 +1,18 @@
 package app
 
 import (
+	"fmt"
 	"game_pad_linux_server/pkg/adb"
 	"game_pad_linux_server/pkg/devices"
 	"game_pad_linux_server/pkg/server"
 	"log"
 	"os"
+
+	"github.com/labstack/gommon/color"
 )
 
 func Execute() {
+	fmt.Println(color.Magenta("gamepad-cli: please test 'game_pad_linux_server --gui'"))
 	// Create devices
 	devices, err := devices.CreateDevices()
 	if err != nil {
