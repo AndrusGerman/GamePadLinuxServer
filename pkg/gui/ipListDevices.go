@@ -10,6 +10,7 @@ import (
 
 func listDevices() fyne.CanvasObject {
 	ipText := widget.NewLabel("IP:// ")
+	ipText.TextStyle.Bold = true
 
 	ips := utils.GetLocalIP()
 	listIP := widget.NewList(

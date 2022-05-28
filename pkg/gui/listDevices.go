@@ -10,8 +10,8 @@ import (
 )
 
 func listDeices() fyne.CanvasObject {
-
 	listDevicesText := widget.NewLabel("Devices USB:")
+	listDevicesText.TextStyle.Bold = true
 
 	listDevices := widget.NewListWithData(
 		utils.DevicesList,

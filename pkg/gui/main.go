@@ -26,7 +26,13 @@ func Execute() {
 	// devices count
 	bindDevicesCount := binding.IntToStringWithFormat(utils.DevicesConnect, "Devices connect: %d")
 	devicesConnect := widget.NewLabel("")
+	devicesConnect.TextStyle.Bold = true
 	devicesConnect.Bind(bindDevicesCount)
+
+	// devices count
+	statusLogs := widget.NewLabel("")
+	statusLogs.TextStyle.Italic = true
+	statusLogs.Bind(utils.StatusLog)
 
 	// create server btn
 	var startServerBtn = createStartServerBtn(server)
@@ -40,8 +46,9 @@ func Execute() {
 	w.SetContent(container.NewVBox(
 		title,
 		listContainer,
-		startServerBtn,
 		devicesConnect,
+		statusLogs,
+		startServerBtn,
 	))
 
 	w.ShowAndRun()

@@ -6,6 +6,7 @@ func createTitle() *widget.Label {
 	title := widget.NewLabel(primaryLabelText)
 	title.Bind(statusServer)
 	title.TextStyle.Bold = true
+	title.TextStyle.Monospace = true
 
 	return title
 }

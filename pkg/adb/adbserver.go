@@ -20,6 +20,7 @@ func WaitADBClients() {
 	scanAdb()
 	watch, err := usbwatch.NewUSBWatch()
 	if err != nil {
+		utils.SetStatusLog(err.Error())
 		fmt.Println(color.Red("GamePad-adbwath: error start usb watch "), err)
 		return
 	}
@@ -37,24 +38,29 @@ func scanAdb() {
 	// IS ADB Device
 	err := verifyDeviceConnects()
 	if err != nil {
+		utils.SetStatusLog(err.Error())
 		log.Println("GamePad-adbwath: Brack devices find adb, ", err)
 		return
 	}
 
 	// adb
-	connectReverseAdb()
+	err = connectReverseAdb()
+	if err != nil {
+		log.Println("GamePad-adbwath: reverse connection ", err)
+		utils.SetStatusLog(err.Error())
+	}
 }
 
-func connectReverseAdb() {
+func connectReverseAdb() error {
 	devices := utils.GetDevicesList()
 	fmt.Println(color.Grey("GamePad-adbwath: List devices Found: "), devices)
 
 	if len(devices) == 0 {
 		reverseADBStart = false
-		return
+		return nil
 	}
 	if reverseADBStart {
-		return
+		return nil
 	}
 
 	cmd := exec.Command("adb", "reverse", "tcp:8992", "tcp:8992")
@@ -62,10 +68,11 @@ func connectReverseAdb() {
 	if err != nil {
 		log.Println("GamePad-adbwath: Error create reverse adb ", err)
 		log.Println("GamePad-adbwath: If adb is not available the usb connection will not be usable")
-		return
+		return err
 	}
 	reverseADBStart = true
 	fmt.Println(color.Green("GamePad-adbwath: reverse connection complete"))
+	return nil
 }
 
 func verifyDeviceConnects() error {
