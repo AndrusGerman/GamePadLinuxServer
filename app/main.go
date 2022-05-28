@@ -22,7 +22,8 @@ func Execute() {
 	}
 	defer devices.Close()
 
-	go adb.WaitADBClients()
+	watch := adb.WaitADBClients()
+	defer watch.Close()
 
 	// Start Server
 	server := server.NewServer(devices)

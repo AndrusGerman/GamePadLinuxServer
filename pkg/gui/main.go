@@ -1,6 +1,7 @@
 package gui
 
 import (
+	"game_pad_linux_server/pkg/adb"
 	"game_pad_linux_server/pkg/utils"
 
 	"fyne.io/fyne/v2/container"
@@ -16,6 +17,11 @@ func setStatus(status string) {
 }
 
 func Execute() {
+
+	// adb server
+	watch := adb.WaitADBClients()
+	defer watch.Close()
+
 	setStatus("Server Close")
 	// Create devices
 	w, server := create_app()

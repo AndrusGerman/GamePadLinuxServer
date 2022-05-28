@@ -1,7 +1,6 @@
 package gui
 
 import (
-	"game_pad_linux_server/pkg/adb"
 	"game_pad_linux_server/pkg/devices"
 	"game_pad_linux_server/pkg/server"
 	"log"
@@ -23,7 +22,6 @@ func create_app() (fyne.Window, *server.ServerManagerDefault) {
 	// Start Server
 	server := server.NewServer(devices)
 	defer server.Close()
-	go adb.WaitADBClients()
 
 	a := app.NewWithID("com.andruscodex.gamepadlinux")
 	w := a.NewWindow("GamePadLinux: AndrusCodex")

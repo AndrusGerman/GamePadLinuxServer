@@ -14,7 +14,7 @@ import (
 
 var reverseADBStart = false
 
-func WaitADBClients() {
+func WaitADBClients() *usbwatch.USBWatch {
 	fmt.Println(color.Grey("GamePad-adbwath: is start"))
 	fmt.Println(color.Grey("GamePad-adbwath: adb allows connection via usb, usb debugging has to be active on your cell phone"))
 	scanAdb()
@@ -22,11 +22,10 @@ func WaitADBClients() {
 	if err != nil {
 		utils.SetStatusLog(err.Error())
 		fmt.Println(color.Red("GamePad-adbwath: error start usb watch "), err)
-		return
+		return nil
 	}
-	defer watch.Close()
-
-	watch.WatchOn(scanAdb, scanAdb)
+	go watch.WatchOn(scanAdb, scanAdb)
+	return watch
 }
 
 func scanAdb() {

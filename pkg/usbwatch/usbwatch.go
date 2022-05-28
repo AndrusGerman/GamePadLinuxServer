@@ -5,7 +5,11 @@ import (
 	"fmt"
 	"game_pad_linux_server/pkg/utils"
 	"io"
+	"log"
+	"os"
 	"os/exec"
+	"os/signal"
+	"syscall"
 
 	"github.com/labstack/gommon/color"
 )
@@ -25,6 +29,15 @@ func NewUSBWatch() (*USBWatch, error) {
 	if err != nil {
 		return nil, nil
 	}
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		for sig := range c {
+			log.Println("signal: ", sig.String())
+			os.Exit(0)
+		}
+	}()
 
 	return &USBWatch{
 		cmd:  cmd,
@@ -47,6 +60,7 @@ func (ctx *USBWatch) WatchOn(connect func(), disconnect func()) {
 }
 
 func (ctx *USBWatch) Close() {
+	fmt.Println("Close USB Watch")
 	if ctx.cmd.Process != nil {
 		ctx.cmd.Process.Kill()
 	}
