@@ -34,6 +34,9 @@ jobs:
       
     - name: Prepare OpenGL api
       run: sudo apt-get install libgl1-mesa-dev
+      
+    - name: Prepare OpenGL deps libxxf86vm
+      run: sudo apt-get install libxxf86vm-dev
 
     - name: Set up Go
       uses: actions/setup-go@v3
